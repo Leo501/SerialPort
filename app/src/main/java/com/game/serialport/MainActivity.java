@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.main_send_b:{
                  String context=send_et.getText().toString();
-                context="11223344556677";
                 try {
                     serialStream.setData(context);
                 } catch (NullPointerException e) {
