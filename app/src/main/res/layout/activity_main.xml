@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="100dp"
+    tools:context="com.game.serialport.MainActivity">
+
+        <EditText
+            android:id="@+id/main_send_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_stop_b"
+            android:hint="发送的内容" />
+        <Button
+            android:id="@+id/main_send_b"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_send_et"
+            android:text="发送"/>
+        <TextView
+            android:id="@+id/main_recive_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="接收的内容" />
+        <Button
+            android:id="@+id/main_recive_b"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_recive_tv"
+            android:text="接收"/>
+        <Button
+            android:id="@+id/main_stop_b"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_recive_b"
+            android:text="停止"/>
+
+</RelativeLayout>
+</ScrollView>
