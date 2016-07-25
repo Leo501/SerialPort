@@ -43,11 +43,8 @@ public class SerialPort {
 	public SerialPort(File device, int baudrate, int flags) throws SecurityException, IOException {
 
 		/* Check access permission */
-		//// ����Ƿ��ȡ��ָ�����ڵĶ�дȨ��
 		if (!device.canRead() || !device.canWrite()) {
 			try {
-				/* Missing read/write permission, trying to chmod the file */
-				// ���û�л�ȡָ�����ڵĶ�дȨ�ޣ���ͨ�����ڵ�linux�ķ�ʽ�޸Ĵ��ڵ�Ȩ��Ϊ�ɶ�д
 				Process su;
 				su = Runtime.getRuntime().exec("su");
 				String cmd = "chmod 666 " + device.getAbsolutePath() + "\n"
@@ -82,15 +79,6 @@ public class SerialPort {
 	}
 
 	// JNI
-	// JNI������java���ؽӿڣ�ʵ�ִ��ڵĴ򿪺͹ر�
-    /**
-     * �����������Ҫ�Ĳ����������豸���������ʣ�����λ������λ��ֹͣλ
-     * ���м���λһ��Ĭ��λNONE,����λһ��Ĭ��Ϊ8��ֹͣλĬ��Ϊ1
-     * @param path �����豸�ľݶ�·��
-     * @param baudrate ������
-     * @param flags �����������ʱ��Ϊ��У��λ�� ���ڱ���Ŀ������������岻��
-     * @return
-     */
 	private native static FileDescriptor open(String path, int baudrate, int flags);//�򿪴���
 	public native void close();//�رմ���
 	static {
