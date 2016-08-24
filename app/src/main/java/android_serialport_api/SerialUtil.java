@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 /**
  * Created by Administrator on 2016/7/22.
  */
-public class SerialStream {
+public class SerialUtil {
     private  SerialPort serialPort;
     private  InputStream inputStream;
     private  OutputStream outputStream;
@@ -21,7 +21,7 @@ public class SerialStream {
     private static final int MAX =512;
     private String path;
 
-    public SerialStream(String path, int baudrate, int flags ) throws NullPointerException{
+    public SerialUtil(String path, int baudrate, int flags ) throws NullPointerException{
         try {
             serialPort=new SerialPort(new File(path),baudrate,flags);
         } catch (IOException e) {
@@ -48,30 +48,42 @@ public class SerialStream {
      * 串口读数据
      * @return
      */
-    public synchronized String getData() throws NullPointerException{
-        String data=null;
+    public synchronized byte[] getData() throws NullPointerException{
         //上锁，每次只能一个线程在取得数据
         try {
             byte [] buffer=new byte[MAX];
             if (inputStream==null) throw new NullPointerException("inputStream is null");
+            //一次最多可读Max的长度
             size=inputStream.read(buffer);
-            if (size>0) data=bytesToHexString(buffer,size);
+            if (size>0) return buffer;
+            else return null;
         } catch (Exception e) {
             e.printStackTrace();
-            data=null;
+            return null;
         }
-        return data;
+    }
+    public synchronized byte[] getDataByte()throws NullPointerException{
+        byte [] buffer=new byte[MAX];
+        if (inputStream==null) throw new NullPointerException("is null");
+        try {
+            if (inputStream.available()>0){
+                inputStream.read(buffer);
+                return buffer;
+            }else return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
      * 患上写数据
-     * @param hex 显示的16进制的字符串
+     * @param data 显示的16进制的字符串
      */
-    public synchronized void setData(String hex) throws NullPointerException{
+    public synchronized void setData(byte[] data) throws NullPointerException{
         if (outputStream==null) throw new NullPointerException("outputStream为空");
-        byte[] bytes=hexStringToBytes(hex);
         try {
-            outputStream.write(bytes);
+            outputStream.write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }

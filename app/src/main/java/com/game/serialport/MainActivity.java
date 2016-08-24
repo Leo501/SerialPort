@@ -2,13 +2,14 @@ package com.game.serialport;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android_serialport_api.SerialStream;
+import android_serialport_api.SerialUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ReadThread readThread;
     private int size=-1;
     private static final String TAG = "MainActivity";
-    private SerialStream serialStream;
+    private SerialUtil serialUtil;
     private String path="/dev/ttyS4";
     private int baudrate=115200;
     private int flags=0;
@@ -31,6 +32,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         init();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
     protected void init(){
         receive_tv=(TextView)findViewById(R.id.main_recive_tv);
         receive_b=(Button) findViewById(R.id.main_recive_b);
@@ -42,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stop_b.setOnClickListener(this);
         try {
             //设置串口号、波特率，
-            serialStream=new SerialStream(path,baudrate,0);
+            serialUtil =new SerialUtil(path,baudrate,0);
         } catch (NullPointerException e) {
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -62,8 +70,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.main_send_b:{
                  String context=send_et.getText().toString();
+                Log.d(TAG, "onClick: "+context);
                 try {
-                    serialStream.setData(context);
+                    serialUtil.setData(context.getBytes());
                 } catch (NullPointerException e) {
                     Toast.makeText(MainActivity.this, "串口设置有误，无法发送", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -87,8 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.run();
             while (!Thread.currentThread().isInterrupted()){
                 try {
-                    String data=serialStream.getData();
-                    if(data!=null) onDataReceived(data);
+                    byte[] data= serialUtil.getDataByte();
+                    if(data!=null) onDataReceived(data.toString());
                 }catch (NullPointerException e){
                     onDataReceived("-1");
                     e.printStackTrace();
