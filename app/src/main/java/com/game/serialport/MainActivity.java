@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android_serialport_api.SerialUtil;
+import android_serialport_api.SerialUtilOld;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ReadThread readThread;
     private int size=-1;
     private static final String TAG = "MainActivity";
-    private SerialUtil serialUtil;
+    private SerialUtilOld serialUtilOld;
     private String path="/dev/ttyS4";
     private int baudrate=115200;
     private int flags=0;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         stop_b.setOnClickListener(this);
         try {
             //设置串口号、波特率，
-            serialUtil =new SerialUtil(path,baudrate,0);
+            serialUtilOld =new SerialUtilOld(path,baudrate,0);
         } catch (NullPointerException e) {
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                  String context=send_et.getText().toString();
                 Log.d(TAG, "onClick: "+context);
                 try {
-                    serialUtil.setData(context.getBytes());
+                    serialUtilOld.setData(context.getBytes());
                 } catch (NullPointerException e) {
                     Toast.makeText(MainActivity.this, "串口设置有误，无法发送", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super.run();
             while (!Thread.currentThread().isInterrupted()){
                 try {
-                    byte[] data= serialUtil.getDataByte();
+                    byte[] data= serialUtilOld.getDataByte();
                     if(data!=null) onDataReceived(data.toString());
                 }catch (NullPointerException e){
                     onDataReceived("-1");
